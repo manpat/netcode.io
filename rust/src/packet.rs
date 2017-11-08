@@ -123,7 +123,7 @@ fn get_additional_data(prefix: u8, protocol_id: u64) -> Result<[u8; NETCODE_VERS
 
 pub fn decode(data: &[u8], protocol_id: u64, private_key: Option<&[u8; NETCODE_KEY_BYTES]>, out: &mut [u8; NETCODE_MAX_PAYLOAD_SIZE])
         -> Result<(u64, Packet), PacketError> {
-    let mut source = &mut io::Cursor::new(data);
+    let source = &mut io::Cursor::new(data);
     let prefix_byte = source.read_u8()?;
     let (ty, sequence_len) = decode_prefix(prefix_byte);
 

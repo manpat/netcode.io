@@ -46,7 +46,7 @@ impl Clone for ConnectSequence {
     fn clone(&self) -> ConnectSequence {
         match self {
             &ConnectSequence::SendingToken => ConnectSequence::SendingToken,
-            &ConnectSequence::SendingChallenge(seq, ref token) => ConnectSequence::SendingChallenge(seq, *token.clone())
+            &ConnectSequence::SendingChallenge(seq, ref token) => ConnectSequence::SendingChallenge(seq, token.clone())
         }
     }
 }
@@ -186,7 +186,7 @@ impl<I,S> ClientData<I,S> where I: SocketProvider<I,S> {
     fn send_challenge_token(&mut self, sequence: u64, token: &[u8; NETCODE_CHALLENGE_TOKEN_BYTES]) -> Result<usize, SendError> {
         let packet = packet::ResponsePacket {
             token_sequence: sequence,
-            token_data: *token.clone()
+            token_data: token.clone()
         };
 
         self.channel.send(self.time, &packet::Packet::Response(packet), None, &mut self.socket)
