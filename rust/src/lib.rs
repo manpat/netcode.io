@@ -140,13 +140,13 @@ extern crate byteorder;
 #[macro_use]
 extern crate log;
 
-#[cfg(test)]
+// #[cfg(test)]
 extern crate env_logger;
 #[cfg(test)]
 #[macro_use]
 extern crate lazy_static;
 
-#[cfg(test)]
+// #[cfg(test)]
 pub mod capi;
 
 mod common;
@@ -161,8 +161,21 @@ mod packet;
 mod socket;
 
 pub use token::{ConnectToken, DecodeError};
-pub use common::{NETCODE_MAX_PACKET_SIZE, NETCODE_MAX_PAYLOAD_SIZE, NETCODE_USER_DATA_BYTES};
+pub use common::{NETCODE_KEY_BYTES, NETCODE_MAX_PACKET_SIZE, NETCODE_MAX_PAYLOAD_SIZE, NETCODE_USER_DATA_BYTES};
 pub use server::{UdpServer, Server, ServerEvent};
 pub use client::{UdpClient, Client, ClientEvent, State as ClientState};
 pub use crypto::{generate_key};
 pub use error::*;
+
+#[allow(dead_code)]
+pub fn enable_logging() {
+    use env_logger::LogBuilder;
+    use log::LogLevelFilter;
+
+    LogBuilder::new().filter(None, LogLevelFilter::Trace).init().unwrap();
+
+    use capi::*;
+    unsafe {
+        netcode_log_level(NETCODE_LOG_LEVEL_DEBUG as i32);
+    }
+}
